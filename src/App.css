@@ -1,0 +1,412 @@
+/* ---- Reset for full-screen app ---- */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* Basic light palette (tweak to taste) */
+:root {
+  --surface: #ffffff;
+  --text: #0f172a;      /* slate-900 */
+  --muted: #64748b;     /* slate-500 */
+  --border: #e5e7eb;    /* gray-200 */
+}
+
+/* ---- App shell ---- */
+.app-root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Sticky top tabs */
+.top-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Segmented control */
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+.seg-btn {
+  border: 0;
+  background: transparent;
+  padding: .45rem .8rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+.seg-btn:hover,
+.seg-btn.active {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--text);
+}
+
+/* The area where a tester renders */
+.body-slot {
+  flex: 1;        /* take remaining height */
+  min-height: 0;  /* allow inner scroll areas */
+  display: block;
+}
+
+/* Optional: utility button style used in testers */
+.button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: .5rem .75rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.button.primary {
+  border: none;
+  background: #2563eb;
+  color: #fff;
+}
+
+
+/* ───────── Vet-Chat tester UI (namespaced with .vc-) ───────── */
+.vc-root {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  height: calc(100vh - 52px);
+  background: var(--surface);
+}
+
+/* Header */
+.vc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: .75rem;
+  padding: .9rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.vc-brand { display:flex; align-items:center; gap:.9rem; }
+.vc-header h1 { margin:0; font-size: 1.6rem; font-weight: 800; }
+.vc-conn { display:inline-flex; align-items:center; gap:.5rem; color: var(--muted); }
+.vc-dot { width:10px; height:10px; border-radius:999px; background:#9ca3af; }
+.vc-dot.connecting, .vc-dot.reconnecting { background:#f59e0b; }
+.vc-dot.connected { background:#10b981; box-shadow:0 0 0 6px rgba(16,185,129,.15); }
+.vc-controls { display:flex; align-items:center; gap:.75rem; }
+.vc-controls .field { display:flex; flex-direction:column; gap:.25rem; }
+.vc-controls label { font-size:.72rem; color:var(--muted); }
+.vc-controls input {
+  border:1px solid var(--border);
+  background:var(--surface);
+  padding:.55rem .65rem;
+  border-radius:10px;
+  min-width: 220px;
+  color: var(--text);
+}
+
+/* Subheader line */
+.vc-sub {
+  padding: .5rem 1rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* Messages list */
+.vc-list {
+  overflow-y: auto;
+  padding: 1rem;
+  background: linear-gradient(180deg, var(--bg), rgba(0,0,0,0) 160px);
+}
+
+/* Empty state */
+.vc-empty { display:grid; place-items:center; color:var(--muted); padding: 10vh 0; }
+.vc-empty-emoji { font-size: 2rem; margin-bottom:.5rem; }
+
+/* Rows + bubbles */
+.vc-row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: .55rem;
+  margin: .5rem 0;
+  align-items: end;
+}
+.vc-row.sent { grid-template-columns: 1fr 36px; }
+.vc-row.sent .vc-avatar { order: 2; }
+.vc-row.sent .vc-bubble { order: 1; justify-self: end; }
+
+.vc-avatar {
+  width:36px; height:36px; border-radius:50%;
+  display:grid; place-items:center;
+  font-size:.8rem; font-weight:700; color:#fff;
+  background: var(--avatar-assistant, #22c55e);
+  user-select:none;
+}
+.vc-avatar.sent { background: var(--avatar-user, #0ea5e9); }
+
+.vc-bubble {
+  max-width: 70ch;
+  padding: .75rem .9rem;
+  border-radius: 16px;
+  line-height: 1.55;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  box-shadow: 0 1px 1px rgba(0,0,0,.02);
+  position: relative;
+}
+.vc-bubble.sent {
+  background: var(--sent, linear-gradient(180deg, #2563eb 0%, #1e40af 100%));
+  color: #fff;
+  border-bottom-right-radius: 8px;
+}
+.vc-bubble.received {
+  background: var(--received, #eef2ff);
+  color: var(--text);
+  border-bottom-left-radius: 8px;
+}
+
+.vc-text { white-space: pre-wrap; }
+.vc-meta { display:flex; justify-content:flex-end; margin-top:.35rem; }
+.vc-ts { font-size:.72rem; opacity:.8; }
+
+/* System & errors */
+.vc-system { text-align:center; margin:.85rem 0; }
+.vc-system-pill {
+  font-size:.78rem; padding:.3rem .8rem; border-radius:9999px;
+  background: var(--system, #f3f4f6); color: var(--muted);
+}
+.vc-system-pill.error { background: var(--error, #fee2e2); color: #991b1b; }
+
+/* Input area */
+.vc-input {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .6rem;
+  padding: .8rem 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.vc-input input[type="text"] {
+  border:1px solid var(--border);
+  background: var(--bg);
+  padding:.8rem 1rem;
+  border-radius: 9999px;
+  color: var(--text);
+}
+.vc-input input[type="text"]::placeholder { color: var(--muted); }
+.vc-input input[type="text"]:focus {
+  outline:none; border-color:var(--primary);
+  box-shadow:0 0 0 3px var(--ring, rgba(37,99,235,.25));
+}
+.vc-send {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:48px; height:48px; border-radius:50%;
+  border:none; cursor:pointer; color:#fff;
+  background: var(--primary);
+  box-shadow: 0 6px 14px rgba(37,99,235,.25);
+}
+.vc-send:hover { background: var(--primary-strong); }
+.vc-send:active { transform: translateY(1px); }
+
+/* Smooth fade only for the newest streamed chunk */
+.chunk-fade {
+  display:inline;
+  animation: vcChunkIn 180ms ease;
+  will-change: opacity, transform;
+}
+@keyframes vcChunkIn {
+  from { opacity: 0; transform: translateY(1px); }
+  to   { opacity: 1; transform: none; }
+}
+
+
+/* Full-bleed: make the tester span the whole viewport width */
+.vc-root {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  height: 100vh;       /* fill full viewport height */
+  width: 100vw;        /* fill full viewport width */
+  max-width: 100vw;    /* prevent centering/narrowing */
+  background: var(--surface);
+}
+
+/* List area should use full width */
+.vc-list {
+  overflow-y: auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+/* Make bubbles able to span the container width */
+.vc-bubble {
+  max-width: 100%;
+}
+
+/* Footer actions wrap send + cancel side by side */
+.vc-input {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .6rem;
+  padding: .8rem 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.vc-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* Cancel button */
+:root {
+  --danger: #ef4444;
+  --danger-strong: #dc2626;
+  --primary: #2563eb;
+  --primary-strong: #1e40af;
+  --bg: #fff;
+  --ring: rgba(37,99,235,.25);
+}
+
+.vc-cancel {
+  border: none;
+  background: var(--danger);
+  color: #fff;
+  padding: .6rem .9rem;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(239, 68, 68, .25);
+}
+.vc-cancel:hover { background: var(--danger-strong); }
+.vc-cancel.disabled,
+.vc-cancel:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+/* Keep the send button round; place it next to Cancel */
+.vc-send {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:48px; height:48px; border-radius:50%;
+  border:none; cursor:pointer; color:#fff;
+  background: var(--primary);
+  box-shadow: 0 6px 14px rgba(37,99,235,.25);
+}
+.vc-send:hover { background: var(--primary-strong); }
+.vc-send:active { transform: translateY(1px); }
+
+/* Optional: widen header a touch to match full-bleed look */
+.vc-header, .vc-sub {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+
+.vc-cite { font-size: 0.8em; margin-left: .15rem; }
+.vc-cite a { text-decoration: none; opacity: .8; }
+.vc-cite a:hover { text-decoration: underline; opacity: 1; }
+
+/* ───────── Shared login box ───────── */
+.login-box {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: grid;
+  gap: 10px;
+  width: min(100%, 520px);
+}
+.login-box__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+.login-box__status {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.login-box__status mark {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--text);
+  padding: 0 6px;
+  border-radius: 6px;
+}
+.login-box__form {
+  display: grid;
+  gap: 8px;
+}
+.login-box__field { display: grid; gap: 6px; }
+.login-box__field label {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.login-box__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.login-box__row input,
+.login-box__host-row input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+  background: var(--surface);
+  color: var(--text);
+}
+.login-box__row button,
+.login-box__host-row button,
+.logout-btn {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  background: #f8fafc;
+  cursor: pointer;
+}
+.login-box__row button:disabled,
+.login-box__host-row button:disabled,
+.logout-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.logout-btn {
+  background: var(--surface);
+}
+.login-box__host-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.login-box__host-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.host-btn.active {
+  background: rgba(37, 99, 235, 0.14);
+  color: var(--text);
+}
+.login-box__footer {
+  display: grid;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+.login-box__message { color: #166534; margin: 0; }
+.login-box__error { color: #b91c1c; margin: 0; }
+
+.vc-auth {
+  padding: 12px 20px 0 20px;
+  display: flex;
+  justify-content: flex-start;
+}
